@@ -51,17 +51,17 @@
             padding: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             opacity: 0;
-            transition: opacity 1s ease 0.5s;
+            transition: opacity 1s ease 0.5s, transform 0.8s ease;
             border-radius: 5px;
             z-index: 1;
             cursor: pointer;
-            transform-origin: top;
-            transition: transform 0.5s ease;
+            transform-origin: top; /* Open from the top */
         }
 
         /* Text inside the letter */
         .letter-content {
-            display: none;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
         }
 
         .letter p {
@@ -88,13 +88,16 @@
 
         /* Letter Opening Animation */
         .letter.opened {
-            transform: rotateX(180deg); /* Simulate opening of a card */
+            transform: rotateX(0); /* Simulate opening of a card, now only rotate slightly */
+            height: 300px; /* Expand the height to reveal more content */
+            transition: height 0.8s ease, opacity 0.5s ease;
         }
 
         /* Revealing the Message Inside the Letter */
         .letter.opened .letter-content {
-            display: block;
+            opacity: 1;
         }
+
     </style>
 </head>
 <body>
@@ -121,11 +124,9 @@
             event.stopPropagation(); // Prevent triggering the gift box again
 
             const letter = document.getElementById('letter');
-            const letterContent = document.querySelector('.letter-content');
 
             // Toggle letter opening and reveal the message
             letter.classList.add('opened');
-            letterContent.style.display = 'block';
         }
     </script>
 </body>
