@@ -12,6 +12,8 @@
             text-align: center;
             padding: 50px;
         }
+
+        /* Envelope Style */
         .envelope {
             width: 300px;
             height: 200px;
@@ -21,11 +23,13 @@
             transform-origin: center bottom;
             transition: transform 0.5s;
         }
+
+        /* Top Flap of Envelope */
         .envelope .top-flap {
             position: absolute;
             width: 0;
             height: 0;
-            top: -150px;
+            top: 0;
             left: 0;
             right: 0;
             margin: auto;
@@ -34,7 +38,10 @@
             border-bottom: 150px solid #ff69b4;
             transform-origin: top;
             transition: transform 1s ease-in-out;
+            transform: rotateX(0deg);  /* Closed state */
         }
+
+        /* Envelope Body */
         .envelope .body {
             width: 300px;
             height: 200px;
@@ -42,6 +49,8 @@
             position: relative;
             overflow: hidden;
         }
+
+        /* Letter Inside the Envelope */
         .envelope .letter {
             width: 280px;
             height: 180px;
@@ -57,11 +66,13 @@
             opacity: 0;
             border-radius: 5px;
         }
+
         .letter p {
             font-family: 'Sacramento', cursive;
             font-size: 1.5em;
             color: #ff69b4;
         }
+
         .happy-birthday {
             font-family: 'Sacramento', cursive;
             font-size: 2em;
@@ -71,18 +82,22 @@
     </style>
 </head>
 <body>
+    <!-- Envelope Container -->
     <div class="envelope" onclick="openEnvelope()">
-        <div class="top-flap"></div>
+        <div class="top-flap"></div> <!-- Top Flap of Envelope -->
         <div class="body">
             <div class="letter">
                 <p>Happy Birthday, My Love! 🎉</p>
             </div>
         </div>
     </div>
+    
+    <!-- Hidden Birthday Message -->
     <div id="birthday-message" class="happy-birthday">
         <h1>Happy Birthday, My Love!</h1>
         <p>Today is your special day, and I just wanted to remind you how amazing you are! 🌟 You bring so much light and joy into my life, and I am so grateful for every moment we share. May all your dreams come true, and may you continue to shine brightly. I love you more than words can express. ❤️</p>
     </div>
+
     <script>
         function openEnvelope() {
             const envelope = document.querySelector('.envelope');
