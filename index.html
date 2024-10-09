@@ -20,7 +20,6 @@
             position: relative;
             margin: 100px auto;
             cursor: pointer;
-            z-index: 1;
         }
 
         /* Top Flap of Envelope */
@@ -56,13 +55,13 @@
             height: 180px;
             background: white;
             position: absolute;
-            top: 100%;
+            top: 100%; /* Starts completely hidden inside the envelope */
             left: 10px;
             text-align: center;
             padding: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 1.5s ease-in-out, opacity 0.5s ease-in-out 1s;
-            transform: translateY(0);
+            transition: transform 0.8s cubic-bezier(0.55, 0.06, 0.68, 0.19), opacity 0.3s ease-in-out 0.5s;
+            transform-origin: bottom;
             opacity: 0;
             border-radius: 5px;
             z-index: 1;
@@ -75,17 +74,20 @@
             color: #ff69b4;
         }
 
-        /* Birthday Message */
-        .open-message {
-            display: none;
-            font-size: 1.5em;
-            font-family: 'Sacramento', cursive;
-            color: #ff69b4;
+        /* Opened Envelope */
+        .opened .top-flap {
+            transform: rotateX(-180deg);
+        }
+
+        /* Letter "Jump Out" Animation */
+        .opened .letter {
+            transform: translateY(-250%) scale(1.1); /* Make the letter jump out */
+            opacity: 1;
         }
 
         /* Letter Open State */
-        .letter.opened {
-            transform: translateY(0) scale(1.5);
+        .letter.expanded {
+            transform: translateY(0) scale(1.5); /* The letter expands when clicked */
             width: 400px;
             height: 400px;
             top: 50%;
@@ -94,14 +96,14 @@
             z-index: 3;
         }
 
-        .opened .top-flap {
-            transform: rotateX(-180deg);
+        /* Birthday Message */
+        .open-message {
+            display: none;
+            font-size: 1.5em;
+            font-family: 'Sacramento', cursive;
+            color: #ff69b4;
         }
 
-        .opened .letter {
-            transform: translateY(-250%);
-            opacity: 1;
-        }
     </style>
 </head>
 <body>
@@ -126,7 +128,7 @@
             const envelope = document.getElementById('envelope');
             const letter = document.getElementById('letter');
 
-            // Open the envelope and slide the letter out
+            // Open the envelope and make the letter "jump" out
             envelope.classList.add('opened');
             letter.classList.add('opened');
 
@@ -175,7 +177,7 @@
             const openMessage = document.getElementById('open-message');
 
             // Expand the letter and show the hidden message
-            letter.classList.add('opened');
+            letter.classList.add('expanded');
             openMessage.style.display = 'block';
         });
     </script>
