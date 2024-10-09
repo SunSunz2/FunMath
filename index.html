@@ -9,177 +9,94 @@
         body {
             background: #f0e6f6;
             font-family: 'Open Sans', sans-serif;
-            text-align: center;
-            padding: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
 
-        /* Envelope Style */
-        .envelope {
-            width: 300px;
+        /* Gift Box Container */
+        .gift-box {
+            width: 200px;
             height: 200px;
+            background: #ff69b4;
             position: relative;
-            margin: 100px auto;
             cursor: pointer;
+            transition: transform 1s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
-        /* Top Flap of Envelope */
-        .envelope .top-flap {
+        /* Gift Box Lid */
+        .gift-lid {
+            width: 200px;
+            height: 40px;
+            background: #ff1493;
             position: absolute;
-            width: 0;
-            height: 0;
             top: 0;
             left: 0;
-            right: 0;
-            margin: auto;
-            border-left: 150px solid transparent;
-            border-right: 150px solid transparent;
-            border-bottom: 150px solid #ff69b4;
-            transform-origin: bottom;
-            transition: transform 0.8s ease-in-out;
             z-index: 2;
+            transition: transform 0.6s ease;
         }
 
-        /* Envelope Body */
-        .envelope .body {
-            width: 300px;
-            height: 200px;
-            background: #ffb6c1;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        /* Letter Inside the Envelope */
+        /* Letter Inside the Gift Box */
         .letter {
-            width: 280px;
-            height: 180px;
+            width: 180px;
+            height: 150px;
             background: white;
             position: absolute;
-            top: 100%; /* Starts completely hidden inside the envelope */
+            top: 60px;
             left: 10px;
             text-align: center;
             padding: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.8s cubic-bezier(0.55, 0.06, 0.68, 0.19), opacity 0.3s ease-in-out 0.5s;
-            transform-origin: bottom;
             opacity: 0;
+            transition: opacity 1s ease 0.5s;
             border-radius: 5px;
             z-index: 1;
-            cursor: grab;
         }
 
         .letter p {
             font-family: 'Sacramento', cursive;
-            font-size: 1.5em;
+            font-size: 1.2em;
             color: #ff69b4;
         }
 
-        /* Opened Envelope */
-        .opened .top-flap {
-            transform: rotateX(-180deg);
+        /* Gift Box Animation */
+        .gift-box.opened {
+            transform: scale(1.5);
         }
 
-        /* Letter "Jump Out" Animation */
-        .opened .letter {
-            transform: translateY(-250%) scale(1.1); /* Make the letter jump out */
+        /* Lid Open Animation */
+        .gift-box.opened .gift-lid {
+            transform: translateY(-100px);
+        }
+
+        /* Letter Revealed */
+        .gift-box.opened .letter {
             opacity: 1;
-        }
-
-        /* Letter Open State */
-        .letter.expanded {
-            transform: translateY(0) scale(1.5); /* The letter expands when clicked */
-            width: 400px;
-            height: 400px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(1.5);
-            z-index: 3;
-        }
-
-        /* Birthday Message */
-        .open-message {
-            display: none;
-            font-size: 1.5em;
-            font-family: 'Sacramento', cursive;
-            color: #ff69b4;
         }
 
     </style>
 </head>
 <body>
-    <!-- Envelope Container -->
-    <div class="envelope" id="envelope" onclick="openEnvelope()">
-        <div class="top-flap"></div> <!-- Top Flap of Envelope -->
-        <div class="body">
-            <div class="letter" id="letter">
-                <p>Happy Birthday, My Love! 🎉</p>
-            </div>
+    <!-- Gift Box -->
+    <div class="gift-box" id="giftBox" onclick="openGiftBox()">
+        <div class="gift-lid"></div> <!-- Gift Lid -->
+        <div class="letter" id="letter">
+            <p>Happy Birthday, My Love! 🎉</p>
         </div>
     </div>
 
-    <!-- Message when Letter is Opened -->
-    <div class="open-message" id="open-message">
-        <p>Today is your special day, and I just wanted to remind you how amazing you are! 🌟 I love you more than words can express. ❤️</p>
-    </div>
-
     <script>
-        // Function to Open the Envelope and Slide Out the Letter
-        function openEnvelope() {
-            const envelope = document.getElementById('envelope');
+        // Function to Open the Gift Box
+        function openGiftBox() {
+            const giftBox = document.getElementById('giftBox');
             const letter = document.getElementById('letter');
 
-            // Open the envelope and make the letter "jump" out
-            envelope.classList.add('opened');
-            letter.classList.add('opened');
-
-            // Make the letter draggable
-            enableDrag(letter);
+            // Add the 'opened' class to the gift box
+            giftBox.classList.add('opened');
         }
-
-        // Function to Drag Elements
-        function enableDrag(element) {
-            let offsetX = 0, offsetY = 0, initialX = 0, initialY = 0;
-
-            element.onmousedown = dragMouseDown;
-
-            function dragMouseDown(e) {
-                e = e || window.event;
-                e.preventDefault();
-                // Get the mouse cursor position at startup:
-                initialX = e.clientX;
-                initialY = e.clientY;
-                document.onmouseup = closeDragElement;
-                document.onmousemove = elementDrag;
-            }
-
-            function elementDrag(e) {
-                e = e || window.event;
-                e.preventDefault();
-                // Calculate the new cursor position:
-                offsetX = initialX - e.clientX;
-                offsetY = initialY - e.clientY;
-                initialX = e.clientX;
-                initialY = e.clientY;
-                // Set the element's new position:
-                element.style.top = (element.offsetTop - offsetY) + "px";
-                element.style.left = (element.offsetLeft - offsetX) + "px";
-            }
-
-            function closeDragElement() {
-                document.onmouseup = null;
-                document.onmousemove = null;
-            }
-        }
-
-        // Open the letter content when clicked
-        document.getElementById('letter').addEventListener('click', function() {
-            const letter = document.getElementById('letter');
-            const openMessage = document.getElementById('open-message');
-
-            // Expand the letter and show the hidden message
-            letter.classList.add('expanded');
-            openMessage.style.display = 'block';
-        });
     </script>
 </body>
 </html>
