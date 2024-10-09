@@ -20,8 +20,7 @@
             position: relative;
             margin: 100px auto;
             cursor: pointer;
-            transform-origin: center bottom;
-            transition: transform 0.5s;
+            z-index: 1;
         }
 
         /* Top Flap of Envelope */
@@ -36,9 +35,9 @@
             border-left: 150px solid transparent;
             border-right: 150px solid transparent;
             border-bottom: 150px solid #ff69b4;
-            transform-origin: top;
-            transition: transform 1s ease-in-out;
-            transform: rotateX(0deg);  /* Closed state */
+            transform-origin: bottom;
+            transition: transform 0.8s ease-in-out;
+            z-index: 2;
         }
 
         /* Envelope Body */
@@ -48,10 +47,11 @@
             background: #ffb6c1;
             position: relative;
             overflow: hidden;
+            z-index: 1;
         }
 
         /* Letter Inside the Envelope */
-        .envelope .letter {
+        .letter {
             width: 280px;
             height: 180px;
             background: white;
@@ -61,10 +61,12 @@
             text-align: center;
             padding: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 1s ease-in-out;
-            transform-origin: bottom;
+            transition: transform 1.5s ease-in-out, opacity 0.5s ease-in-out 1s;
+            transform: translateY(0);
             opacity: 0;
             border-radius: 5px;
+            z-index: 1;
+            cursor: grab;
         }
 
         .letter p {
@@ -73,48 +75,109 @@
             color: #ff69b4;
         }
 
-        .happy-birthday {
-            font-family: 'Sacramento', cursive;
-            font-size: 2em;
-            color: #ff69b4;
+        /* Birthday Message */
+        .open-message {
             display: none;
+            font-size: 1.5em;
+            font-family: 'Sacramento', cursive;
+            color: #ff69b4;
+        }
+
+        /* Letter Open State */
+        .letter.opened {
+            transform: translateY(0) scale(1.5);
+            width: 400px;
+            height: 400px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.5);
+            z-index: 3;
+        }
+
+        .opened .top-flap {
+            transform: rotateX(-180deg);
+        }
+
+        .opened .letter {
+            transform: translateY(-250%);
+            opacity: 1;
         }
     </style>
 </head>
 <body>
     <!-- Envelope Container -->
-    <div class="envelope" onclick="openEnvelope()">
+    <div class="envelope" id="envelope" onclick="openEnvelope()">
         <div class="top-flap"></div> <!-- Top Flap of Envelope -->
         <div class="body">
-            <div class="letter">
+            <div class="letter" id="letter">
                 <p>Happy Birthday, My Love! 🎉</p>
             </div>
         </div>
     </div>
-    
-    <!-- Hidden Birthday Message -->
-    <div id="birthday-message" class="happy-birthday">
-        <h1>Happy Birthday, My Love!</h1>
-        <p>Today is your special day, and I just wanted to remind you how amazing you are! 🌟 You bring so much light and joy into my life, and I am so grateful for every moment we share. May all your dreams come true, and may you continue to shine brightly. I love you more than words can express. ❤️</p>
+
+    <!-- Message when Letter is Opened -->
+    <div class="open-message" id="open-message">
+        <p>Today is your special day, and I just wanted to remind you how amazing you are! 🌟 I love you more than words can express. ❤️</p>
     </div>
 
     <script>
+        // Function to Open the Envelope and Slide Out the Letter
         function openEnvelope() {
-            const envelope = document.querySelector('.envelope');
-            const topFlap = document.querySelector('.top-flap');
-            const letter = document.querySelector('.letter');
+            const envelope = document.getElementById('envelope');
+            const letter = document.getElementById('letter');
 
-            // Open the top flap and reveal the letter
-            topFlap.style.transform = 'rotateX(180deg)';
-            letter.style.transform = 'translateY(-250%)';
-            letter.style.opacity = '1';
+            // Open the envelope and slide the letter out
+            envelope.classList.add('opened');
+            letter.classList.add('opened');
 
-            // After revealing the letter, show the birthday message
-            setTimeout(() => {
-                document.getElementById('birthday-message').style.display = 'block';
-                envelope.style.display = 'none';  // Hide the envelope after it opens
-            }, 2000);
+            // Make the letter draggable
+            enableDrag(letter);
         }
+
+        // Function to Drag Elements
+        function enableDrag(element) {
+            let offsetX = 0, offsetY = 0, initialX = 0, initialY = 0;
+
+            element.onmousedown = dragMouseDown;
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // Get the mouse cursor position at startup:
+                initialX = e.clientX;
+                initialY = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                // Calculate the new cursor position:
+                offsetX = initialX - e.clientX;
+                offsetY = initialY - e.clientY;
+                initialX = e.clientX;
+                initialY = e.clientY;
+                // Set the element's new position:
+                element.style.top = (element.offsetTop - offsetY) + "px";
+                element.style.left = (element.offsetLeft - offsetX) + "px";
+            }
+
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        // Open the letter content when clicked
+        document.getElementById('letter').addEventListener('click', function() {
+            const letter = document.getElementById('letter');
+            const openMessage = document.getElementById('open-message');
+
+            // Expand the letter and show the hidden message
+            letter.classList.add('opened');
+            openMessage.style.display = 'block';
+        });
     </script>
 </body>
 </html>
