@@ -55,7 +55,7 @@
             cursor: pointer;
             transform-origin: top;
             transition: transform 0.8s ease, opacity 0.8s ease;
-            opacity: 0; /* Start hidden */
+            display: none; /* Initially hidden */
         }
 
         /* Text inside the letter */
@@ -81,9 +81,14 @@
             transform: translateY(-100px);
         }
 
+        /* Letter Visible Inside the Box */
+        .letter.visible {
+            display: block;
+            opacity: 1;
+        }
+
         /* Letter Opened */
         .letter.opened {
-            opacity: 1;
             transform: rotateX(0);
             height: 300px; /* Expand the height to reveal the message */
         }
@@ -117,7 +122,7 @@
 
             // Create the letter element
             const letter = document.createElement('div');
-            letter.className = 'letter';
+            letter.className = 'letter visible'; // Ensure the letter is visible right after creation
             letter.id = 'letter';
             letter.innerHTML = `
                 <div class="letter-content">
