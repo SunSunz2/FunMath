@@ -13,45 +13,54 @@
             padding: 50px;
         }
         .envelope {
-            width: 150px;
-            height: 100px;
-            background: #ffb6c1;
+            width: 300px;
+            height: 200px;
             position: relative;
             margin: 100px auto;
             cursor: pointer;
+            transform-origin: center bottom;
             transition: transform 0.5s;
         }
-        .envelope:before, .envelope:after {
-            content: '';
+        .envelope .top-flap {
             position: absolute;
             width: 0;
             height: 0;
-            border-style: solid;
-            border-width: 50px 75px 0 75px;
-            border-color: #ff69b4 transparent transparent transparent;
-            top: -50px;
+            top: -150px;
             left: 0;
+            right: 0;
+            margin: auto;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-bottom: 150px solid #ff69b4;
+            transform-origin: top;
+            transition: transform 1s ease-in-out;
         }
-        .envelope:after {
-            top: auto;
-            bottom: 0;
-            border-width: 0 75px 50px 75px;
-            border-color: transparent transparent #ff69b4 transparent;
+        .envelope .body {
+            width: 300px;
+            height: 200px;
+            background: #ffb6c1;
+            position: relative;
+            overflow: hidden;
         }
-        .letter {
-            width: 140px;
-            height: 90px;
+        .envelope .letter {
+            width: 280px;
+            height: 180px;
             background: white;
             position: absolute;
-            top: 0;
-            left: 5px;
-            transform: translateY(100%);
-            transition: transform 1s;
+            top: 100%;
+            left: 10px;
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 1s ease-in-out;
+            transform-origin: bottom;
             opacity: 0;
+            border-radius: 5px;
         }
-        .envelope.opened .letter {
-            transform: translateY(0);
-            opacity: 1;
+        .letter p {
+            font-family: 'Sacramento', cursive;
+            font-size: 1.5em;
+            color: #ff69b4;
         }
         .happy-birthday {
             font-family: 'Sacramento', cursive;
@@ -63,8 +72,11 @@
 </head>
 <body>
     <div class="envelope" onclick="openEnvelope()">
-        <div class="letter">
-            <p>Happy Birthday, My Love! 🎉</p>
+        <div class="top-flap"></div>
+        <div class="body">
+            <div class="letter">
+                <p>Happy Birthday, My Love! 🎉</p>
+            </div>
         </div>
     </div>
     <div id="birthday-message" class="happy-birthday">
@@ -74,13 +86,19 @@
     <script>
         function openEnvelope() {
             const envelope = document.querySelector('.envelope');
-            envelope.classList.add('opened');
+            const topFlap = document.querySelector('.top-flap');
+            const letter = document.querySelector('.letter');
 
-            // Delay the reveal of the birthday message
+            // Open the top flap and reveal the letter
+            topFlap.style.transform = 'rotateX(180deg)';
+            letter.style.transform = 'translateY(-250%)';
+            letter.style.opacity = '1';
+
+            // After revealing the letter, show the birthday message
             setTimeout(() => {
                 document.getElementById('birthday-message').style.display = 'block';
                 envelope.style.display = 'none';  // Hide the envelope after it opens
-            }, 1500);
+            }, 2000);
         }
     </script>
 </body>
