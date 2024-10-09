@@ -39,7 +39,7 @@
             transition: transform 0.6s ease;
         }
 
-        /* Letter Inside the Gift Box */
+        /* Letter (Gift Card) Inside the Gift Box */
         .letter {
             width: 180px;
             height: 150px;
@@ -54,12 +54,21 @@
             transition: opacity 1s ease 0.5s;
             border-radius: 5px;
             z-index: 1;
+            cursor: pointer;
+            transform-origin: top;
+            transition: transform 0.5s ease;
+        }
+
+        /* Text inside the letter */
+        .letter-content {
+            display: none;
         }
 
         .letter p {
             font-family: 'Sacramento', cursive;
             font-size: 1.2em;
             color: #ff69b4;
+            margin: 0;
         }
 
         /* Gift Box Animation */
@@ -72,19 +81,31 @@
             transform: translateY(-100px);
         }
 
-        /* Letter Revealed */
+        /* Letter Revealed Inside the Box */
         .gift-box.opened .letter {
             opacity: 1;
         }
 
+        /* Letter Opening Animation */
+        .letter.opened {
+            transform: rotateX(180deg); /* Simulate opening of a card */
+        }
+
+        /* Revealing the Message Inside the Letter */
+        .letter.opened .letter-content {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <!-- Gift Box -->
     <div class="gift-box" id="giftBox" onclick="openGiftBox()">
         <div class="gift-lid"></div> <!-- Gift Lid -->
-        <div class="letter" id="letter">
-            <p>Happy Birthday, My Love! 🎉</p>
+        <div class="letter" id="letter" onclick="openLetter(event)">
+            <!-- Initially hidden message -->
+            <div class="letter-content">
+                <p>Happy Birthday, My Love! 🎉</p>
+            </div>
         </div>
     </div>
 
@@ -92,10 +113,19 @@
         // Function to Open the Gift Box
         function openGiftBox() {
             const giftBox = document.getElementById('giftBox');
-            const letter = document.getElementById('letter');
-
-            // Add the 'opened' class to the gift box
             giftBox.classList.add('opened');
+        }
+
+        // Function to Open the Letter
+        function openLetter(event) {
+            event.stopPropagation(); // Prevent triggering the gift box again
+
+            const letter = document.getElementById('letter');
+            const letterContent = document.querySelector('.letter-content');
+
+            // Toggle letter opening and reveal the message
+            letter.classList.add('opened');
+            letterContent.style.display = 'block';
         }
     </script>
 </body>
