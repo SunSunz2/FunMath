@@ -50,12 +50,12 @@
             text-align: center;
             padding: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            opacity: 0;
-            transition: opacity 1s ease 0.5s, transform 0.8s ease;
             border-radius: 5px;
             z-index: 1;
             cursor: pointer;
-            transform-origin: top; /* Open from the top */
+            transform-origin: top;
+            transition: transform 0.8s ease, opacity 0.8s ease;
+            opacity: 0; /* Start hidden */
         }
 
         /* Text inside the letter */
@@ -81,16 +81,11 @@
             transform: translateY(-100px);
         }
 
-        /* Letter Revealed Inside the Box */
-        .gift-box.opened .letter {
-            opacity: 1;
-        }
-
-        /* Letter Opening Animation */
+        /* Letter Opened */
         .letter.opened {
-            transform: rotateX(0); /* Simulate opening of a card, now only rotate slightly */
-            height: 300px; /* Expand the height to reveal more content */
-            transition: height 0.8s ease, opacity 0.5s ease;
+            opacity: 1;
+            transform: rotateX(0);
+            height: 300px; /* Expand the height to reveal the message */
         }
 
         /* Revealing the Message Inside the Letter */
@@ -104,12 +99,6 @@
     <!-- Gift Box -->
     <div class="gift-box" id="giftBox" onclick="openGiftBox()">
         <div class="gift-lid"></div> <!-- Gift Lid -->
-        <div class="letter" id="letter" onclick="openLetter(event)">
-            <!-- Initially hidden message -->
-            <div class="letter-content">
-                <p>Happy Birthday, My Love! 🎉</p>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -117,16 +106,33 @@
         function openGiftBox() {
             const giftBox = document.getElementById('giftBox');
             giftBox.classList.add('opened');
+
+            // Create the letter dynamically after the box is opened
+            setTimeout(createLetter, 600); // Wait for the box to fully open
         }
 
-        // Function to Open the Letter
-        function openLetter(event) {
-            event.stopPropagation(); // Prevent triggering the gift box again
+        // Function to Create the Letter Element
+        function createLetter() {
+            const giftBox = document.getElementById('giftBox');
 
-            const letter = document.getElementById('letter');
+            // Create the letter element
+            const letter = document.createElement('div');
+            letter.className = 'letter';
+            letter.id = 'letter';
+            letter.innerHTML = `
+                <div class="letter-content">
+                    <p>Happy Birthday, My Love! 🎉</p>
+                </div>
+            `;
+            
+            // Append the letter to the gift box
+            giftBox.appendChild(letter);
 
-            // Toggle letter opening and reveal the message
-            letter.classList.add('opened');
+            // Add event listener to open the letter when clicked
+            letter.addEventListener('click', function(event) {
+                event.stopPropagation(); // Prevent triggering the gift box again
+                letter.classList.add('opened');
+            });
         }
     </script>
 </body>
