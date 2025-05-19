@@ -1,145 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Open+Sans&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background: #f0e6f6;
-            font-family: 'Open Sans', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            position: relative;
-        }
+  <meta charset="UTF-8">
+  <title>Math Blaster+!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Fredoka One', cursive;
+      background: linear-gradient(135deg, #cceeff, #e0f7ff);
+      color: #003366;
+      text-align: center;
+      padding-top: 40px;
+      margin: 0;
+    }
 
-        /* Gift Box Container */
-        .gift-box {
-            width: 200px;
-            height: 200px;
-            background: #ff69b4;
-            position: relative;
-            cursor: pointer;
-            transition: transform 1s ease;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
+    h1 {
+      font-size: 40px;
+      color: #0066cc;
+      margin-bottom: 20px;
+      text-shadow: 1px 2px 0 #fff;
+    }
 
-        /* Gift Box Lid */
-        .gift-lid {
-            width: 200px;
-            height: 40px;
-            background: #ff1493;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 2;
-            transition: transform 0.6s ease;
-        }
+    #gameBox {
+      background: white;
+      border-radius: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      padding: 40px;
+      max-width: 600px;
+      margin: auto;
+      display: none;
+    }
 
-        /* Letter (Gift Card) Inside the Gift Box */
-        .letter {
-            width: 120px;
-            height: 100px;
-            background: white;
-            position: absolute;
-            text-align: center;
-            padding: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            z-index: 1;
-            cursor: pointer;
-            transform-origin: top;
-            transition: transform 0.8s ease, opacity 0.8s ease, bottom 0.8s ease, left 0.8s ease;
-            display: none; /* Initially hidden */
-            bottom: 10px; /* Initially positioned within the box */
-            left: 10px; /* Initially positioned within the box */
-        }
+    #question {
+      font-size: 32px;
+      margin: 20px 0;
+      color: #004080;
+    }
 
-        /* Text inside the letter */
-        .letter-content {
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
+    .answers {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
 
-        .letter p {
-            font-family: 'Sacramento', cursive;
-            font-size: 1.2em;
-            color: #ff69b4;
-            margin: 0;
-        }
+    .answer {
+      background-color: #66ccff;
+      border: none;
+      border-radius: 20px;
+      padding: 20px 30px;
+      font-size: 24px;
+      cursor: pointer;
+      color: white;
+      transition: 0.2s;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+    }
 
-        /* Gift Box Animation */
-        .gift-box.opened {
-            transform: scale(1.5);
-        }
+    .answer:hover {
+      background-color: #3399ff;
+      transform: scale(1.1);
+    }
 
-        /* Lid Open Animation */
-        .gift-box.opened .gift-lid {
-            transform: translateY(-100px);
-        }
+    #score, #global-timer, #highscore {
+      font-size: 20px;
+      margin: 10px 0;
+      color: #005580;
+    }
 
-        /* Letter Visible Inside the Box */
-        .letter.visible {
-            display: block;
-            opacity: 1;
-        }
+    #gameover {
+      color: red;
+      font-size: 28px;
+      margin-top: 20px;
+      display: none;
+    }
 
-        /* Letter Opened */
-        .letter.opened {
-            transform: rotateX(0);
-            height: 300px; /* Expand the height to reveal the message */
-        }
+    #startScreen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
 
-        /* Revealing the Message Inside the Letter */
-        .letter.opened .letter-content {
-            opacity: 1;
-        }
+    #startButton, #muteButton {
+      background-color: #66ccff;
+      color: white;
+      border: none;
+      font-size: 24px;
+      padding: 16px 32px;
+      border-radius: 20px;
+      cursor: pointer;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+      transition: 0.2s;
+      margin-top: 20px;
+    }
 
-    </style>
+    #startButton:hover, #muteButton:hover {
+      background-color: #3399ff;
+      transform: scale(1.05);
+    }
+
+    #muteButton {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-    <!-- Gift Box -->
-    <div class="gift-box" id="giftBox" onclick="openGiftBox()">
-        <div class="gift-lid"></div> <!-- Gift Lid -->
-    </div>
 
-    <script>
-        // Function to Open the Gift Box
-        function openGiftBox() {
-            const giftBox = document.getElementById('giftBox');
-            giftBox.classList.add('opened');
+  <div id="startScreen">
+    <h1>🌟 Math Blaster+! 🌟</h1>
+    <button id="startButton">Start Game</button>
+  </div>
 
-            // Create the letter dynamically after the box is opened
-            setTimeout(createLetter, 600); // Wait for the box to fully open
-        }
+  <div id="gameBox">
+    <div id="question">Loading...</div>
+    <div class="answers" id="answers"></div>
+    <div id="score">Score: 0</div>
+    <div id="highscore">Highest Score: 0</div>
+    <div id="global-timer">Time Left: 20</div>
+    <div id="gameover">Game Over!</div>
+    <button id="muteButton">🔊 Mute</button>
+  </div>
 
-        // Function to Create the Letter Element
-        function createLetter() {
-            const giftBox = document.getElementById('giftBox');
+  <audio id="bgMusic" loop>
+    <source src="Mathfun.mp3" type="audio/mpeg">
+  </audio>
 
-            // Create the letter element
-            const letter = document.createElement('div');
-            letter.className = 'letter visible'; // Ensure the letter is visible right after creation
-            letter.id = 'letter';
-            letter.innerHTML = `
-                <div class="letter-content">
-                    <p>Happy Birthday, My Love! 🎉</p>
-                </div>
-            `;
-            
-            // Append the letter to the gift box
-            giftBox.appendChild(letter);
+  <script>
+    let score = 0;
+    let globalTime = 20;
+    let globalTimerInterval;
+    let highscore = parseInt(localStorage.getItem("mathHighScore")) || 0;
 
-            // Add event listener to open the letter when clicked
-            letter.addEventListener('click', function(event) {
-                event.stopPropagation(); // Prevent triggering the gift box again
-                letter.classList.add('opened');
-            });
-        }
-    </script>
+    const music = document.getElementById("bgMusic");
+    const muteButton = document.getElementById("muteButton");
+
+    muteButton.addEventListener("click", () => {
+      if (music.paused) {
+        music.play();
+        muteButton.textContent = "🔊 Mute";
+      } else {
+        music.pause();
+        muteButton.textContent = "🔇 Unmute";
+      }
+    });
+
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function getRandomProblem() {
+      let ops = ['+', '-', '*', '/'];
+      if (score < 5) ops = ['+', '-'];
+      else if (score < 10) ops = ['+', '-', '*'];
+      const op = ops[Math.floor(Math.random() * ops.length)];
+
+      let a = getRandomInt(1, score + 5);
+      let b = getRandomInt(1, score + 5);
+      let question, answer;
+
+      if (op === '+') {
+        answer = a + b;
+        question = `${a} + ${b}`;
+      } else if (op === '-') {
+        if (a < b) [a, b] = [b, a];
+        answer = a - b;
+        question = `${a} - ${b}`;
+      } else if (op === '*') {
+        answer = a * b;
+        question = `${a} × ${b}`;
+      } else if (op === '/') {
+        answer = a;
+        b = getRandomInt(1, score + 3);
+        a = answer * b;
+        question = `${a} ÷ ${b}`;
+      }
+
+      return { question, answer };
+    }
+
+    function generateQuestion() {
+      const { question, answer } = getRandomProblem();
+
+      document.getElementById("question").textContent = question;
+      const answers = new Set([answer]);
+      while (answers.size < 4) {
+        let wrong = answer + getRandomInt(-10, 10);
+        if (wrong !== answer && wrong >= 0) answers.add(wrong);
+      }
+
+      const answerContainer = document.getElementById("answers");
+      answerContainer.innerHTML = "";
+      [...answers].sort(() => Math.random() - 0.5).forEach(num => {
+        const btn = document.createElement("div");
+        btn.className = "answer";
+        btn.textContent = num;
+        btn.onclick = () => {
+          if (num === answer) {
+            score++;
+            globalTime += 5;
+            document.getElementById("score").textContent = `Score: ${score}`;
+            updateHighScore();
+          } else {
+            globalTime -= 3;
+          }
+          updateTimerDisplay();
+          generateQuestion();
+        };
+        answerContainer.appendChild(btn);
+      });
+    }
+
+    function updateTimerDisplay() {
+      document.getElementById("global-timer").textContent = `Time Left: ${globalTime}`;
+    }
+
+    function updateHighScore() {
+      if (score > highscore) {
+        highscore = score;
+        localStorage.setItem("mathHighScore", highscore);
+        document.getElementById("highscore").textContent = `Highest Score: ${highscore}`;
+      }
+    }
+
+    function gameOver() {
+      clearInterval(globalTimerInterval);
+      document.getElementById("gameover").style.display = "block";
+      document.getElementById("question").textContent = "Game Over!";
+      document.getElementById("answers").innerHTML = "";
+    }
+
+    function startGlobalTimer() {
+      globalTimerInterval = setInterval(() => {
+        globalTime--;
+        updateTimerDisplay();
+        if (globalTime <= 0) gameOver();
+      }, 1000);
+    }
+
+    function startGame() {
+      score = 0;
+      globalTime = 20;
+      document.getElementById("score").textContent = `Score: ${score}`;
+      document.getElementById("highscore").textContent = `Highest Score: ${highscore}`;
+      document.getElementById("gameover").style.display = "none";
+      updateTimerDisplay();
+      generateQuestion();
+      startGlobalTimer();
+    }
+
+    document.getElementById("startButton").addEventListener("click", () => {
+      document.getElementById("startScreen").style.display = "none";
+      document.getElementById("gameBox").style.display = "block";
+      muteButton.style.display = "inline-block";
+      music.volume = 0.3;
+      music.play();
+      startGame();
+    });
+  </script>
+
 </body>
 </html>
